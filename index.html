@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>eSIM Analytics Dashboard</title>
+  <meta name="description" content="eSIM Analytics Dashboard — real-time KPIs, leaderboard, destination insights, and revenue charts for your travel eSIM business." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ─── TOP NAV BAR ──────────────────────────────────────────────── -->
+  <header class="topbar" id="topbar">
+    <div class="topbar-left">
+      <div class="brand">
+        <span class="brand-name">eSIM Analytics Dashboard</span>
+      </div>
+    </div>
+
+    <div class="topbar-center">
+      <div class="date-badge" id="live-date">
+        <span class="date-dot"></span>
+        <span id="date-text">Loading...</span>
+      </div>
+    </div>
+
+    <div class="topbar-right">
+      <div class="report-date-wrap">
+        <label for="report-date-input" class="report-date-label">Report Date</label>
+        <input type="date" id="report-date-input" class="report-date-input" value="2026-05-20" />
+      </div>
+      <button class="btn-wallet" id="btn-wallet">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M16 12h2"/></svg>
+        Wallet Summary
+      </button>
+      <button class="btn-download" id="btn-download-csv">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+        Download CSV
+      </button>
+      <div class="admin-avatar" id="admin-avatar" title="Admin">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+    </div>
+  </header>
+
+  <!-- ─── MAIN CONTENT ────────────────────────────────────────────── -->
+  <main class="dashboard-main" id="dashboard-main">
+
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loading-overlay">
+      <div class="loader-ring"></div>
+      <p class="loader-text">Fetching live data...</p>
+    </div>
+
+    <!-- Error Banner -->
+    <div class="error-banner" id="error-banner" style="display:none;">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <span id="error-message">Unable to fetch data. Displaying cached/demo values.</span>
+      <button onclick="document.getElementById('error-banner').style.display='none'" class="error-close">✕</button>
+    </div>
+
+    <!-- ─── KPI CARDS ROW ──────────────────────────────────────────── -->
+    <section class="kpi-row" aria-label="Key Performance Indicators">
+
+      <!-- Today's Performance -->
+      <div class="kpi-card kpi-today" id="kpi-today">
+        <div class="kpi-header">
+          <div class="kpi-icon kpi-icon--coral">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <span class="kpi-badge kpi-badge--coral">TODAY</span>
+        </div>
+        <div class="kpi-title">Today's Performance</div>
+        <div class="kpi-value" id="today-sales">—</div>
+        <div class="kpi-sub">Orders Sold</div>
+        <div class="kpi-revenue" id="today-revenue">₹ —</div>
+        <div class="kpi-sub">Revenue Generated</div>
+        <div class="kpi-glow kpi-glow--coral"></div>
+      </div>
+
+      <!-- June MTD -->
+      <div class="kpi-card kpi-mtd" id="kpi-mtd">
+        <div class="kpi-header">
+          <div class="kpi-icon kpi-icon--cyan">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+          </div>
+          <span class="kpi-badge kpi-badge--cyan">MTD</span>
+        </div>
+        <div class="kpi-title">Month-to-Date</div>
+        <div class="kpi-value" id="mtd-sales">—</div>
+        <div class="kpi-sub">Orders Sold</div>
+        <div class="kpi-revenue" id="mtd-revenue">₹ —</div>
+        <div class="kpi-sub">Revenue Generated</div>
+        <div class="kpi-glow kpi-glow--cyan"></div>
+      </div>
+
+      <!-- Prev Month Same Day -->
+      <div class="kpi-card kpi-pmsd" id="kpi-pmsd">
+        <div class="kpi-header">
+          <div class="kpi-icon kpi-icon--violet">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          </div>
+          <span class="kpi-badge kpi-badge--violet">COMPARISON</span>
+        </div>
+        <div class="kpi-title">Prev Month Same Day</div>
+        <div class="kpi-value" id="pmsd-sales">—</div>
+        <div class="kpi-sub">Orders Sold</div>
+        <div class="kpi-revenue" id="pmsd-revenue">₹ —</div>
+        <div class="kpi-sub">Revenue Generated</div>
+        <div class="kpi-glow kpi-glow--violet"></div>
+      </div>
+
+      <!-- Prev Month Total -->
+      <div class="kpi-card kpi-pm" id="kpi-pm">
+        <div class="kpi-header">
+          <div class="kpi-icon kpi-icon--emerald">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 000 7h5a3.5 3.5 0 010 7H6"/></svg>
+          </div>
+          <span class="kpi-badge kpi-badge--emerald">PREV MONTH</span>
+        </div>
+        <div class="kpi-title">Previous Month Total</div>
+        <div class="kpi-value" id="pm-sales">—</div>
+        <div class="kpi-sub">Orders Sold</div>
+        <div class="kpi-revenue" id="pm-revenue">₹ —</div>
+        <div class="kpi-sub">Revenue Generated</div>
+        <div class="kpi-glow kpi-glow--emerald"></div>
+      </div>
+
+    </section>
+
+    <!-- ─── SPLIT VIEW: LEADERBOARD + DESTINATIONS ─────────────────── -->
+    <section class="split-view" aria-label="Leaderboard and Destinations">
+
+      <!-- Daily Leaderboard -->
+      <div class="panel leaderboard-panel">
+        <div class="panel-header">
+          <div class="panel-title-wrap">
+            <span class="panel-icon panel-icon--coral">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+            </span>
+            <h2 class="panel-title">Daily Leaderboard</h2>
+          </div>
+          <div class="panel-date-tag" id="leaderboard-date-tag">Today</div>
+        </div>
+
+        <div class="table-wrap">
+          <table class="leaderboard-table" id="leaderboard-table" aria-label="Sales Leaderboard">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>SALES REP</th>
+                <th>#DAY</th>
+                <th>#MTD</th>
+                <th>MTD REV</th>
+                <th>ARPU</th>
+                <th>TARGET</th>
+                <th>#PV MONTH</th>
+              </tr>
+            </thead>
+            <tbody id="leaderboard-body">
+              <tr class="skeleton-row"><td colspan="8"><div class="skeleton-line"></div></td></tr>
+              <tr class="skeleton-row"><td colspan="8"><div class="skeleton-line"></div></td></tr>
+              <tr class="skeleton-row"><td colspan="8"><div class="skeleton-line"></div></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Top Destinations -->
+      <div class="panel destinations-panel">
+        <div class="panel-header">
+          <div class="panel-title-wrap">
+            <span class="panel-icon panel-icon--cyan">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13S3 17 3 10a9 9 0 1118 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            </span>
+            <h2 class="panel-title">Top Destinations</h2>
+          </div>
+          <span class="panel-sub-tag">MTD Orders</span>
+        </div>
+
+        <div class="destinations-list" id="destinations-list">
+          <div class="skeleton-dest"></div>
+          <div class="skeleton-dest"></div>
+          <div class="skeleton-dest"></div>
+          <div class="skeleton-dest"></div>
+          <div class="skeleton-dest"></div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ─── ANALYTICS SECTION: 2 CHARTS ───────────────────────────── -->
+    <section class="charts-section" aria-label="Analytics Charts">
+
+      <div class="chart-card" id="chart-daily-card">
+        <div class="panel-header">
+          <div class="panel-title-wrap">
+            <span class="panel-icon panel-icon--cyan">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            </span>
+            <h2 class="panel-title">Daily Summary</h2>
+          </div>
+          <span class="panel-sub-tag" id="chart-daily-month">MTD Orders/Day</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="chart-daily" aria-label="Daily sales chart"></canvas>
+        </div>
+      </div>
+
+      <div class="chart-card" id="chart-monthly-card">
+        <div class="panel-header">
+          <div class="panel-title-wrap">
+            <span class="panel-icon panel-icon--violet">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><rect x="3" y="3" width="18" height="18" rx="2"/><polyline points="3 9 21 9"/><polyline points="9 21 9 9"/></svg>
+            </span>
+            <h2 class="panel-title">Monthly Summary</h2>
+          </div>
+          <span class="panel-sub-tag">All-Time Monthly Trend</span>
+        </div>
+        <div class="chart-container">
+          <canvas id="chart-monthly" aria-label="Monthly sales chart"></canvas>
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <!-- ─── WALLET MODAL ──────────────────────────────────────────────── -->
+  <div class="modal-overlay" id="wallet-modal" style="display:none;" role="dialog" aria-modal="true" aria-label="Wallet Summary">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 class="modal-title">Wallet Summary</h3>
+        <button class="modal-close" id="modal-close" aria-label="Close modal">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="wallet-stat">
+          <span class="wallet-label">MTD Revenue</span>
+          <span class="wallet-val" id="w-mtd-rev">₹ —</span>
+        </div>
+        <div class="wallet-stat">
+          <span class="wallet-label">Today's Revenue</span>
+          <span class="wallet-val" id="w-today-rev">₹ —</span>
+        </div>
+        <div class="wallet-stat">
+          <span class="wallet-label">Prev Month Revenue</span>
+          <span class="wallet-val" id="w-pm-rev">₹ —</span>
+        </div>
+        <div class="wallet-divider"></div>
+        <div class="wallet-stat">
+          <span class="wallet-label">MTD Orders</span>
+          <span class="wallet-val" id="w-mtd-sales">—</span>
+        </div>
+        <div class="wallet-stat">
+          <span class="wallet-label">Today's Orders</span>
+          <span class="wallet-val" id="w-today-sales">—</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
