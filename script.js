@@ -257,10 +257,10 @@ function renderDailyChart(dailyMetrics, reportDate) {
     sales = [23, 28, 12, 29, 31, 12, 13, 28, 45, 33, 34, 45, 26, 31, 48, 43, 28, 24, 27, 34];
   }
 
-  const gradOrange = ctx.createLinearGradient(0, 0, 0, 260);
-  gradOrange.addColorStop(0,   'rgba(255, 107, 0, 0.35)');
-  gradOrange.addColorStop(0.5, 'rgba(255, 107, 0, 0.10)');
-  gradOrange.addColorStop(1,   'rgba(255, 107, 0, 0.00)');
+  const gradOrange = ctx.createLinearGradient(0, 0, 0, 265);
+  gradOrange.addColorStop(0,   'rgba(249, 115, 22, 0.22)');
+  gradOrange.addColorStop(0.65,'rgba(249, 115, 22, 0.06)');
+  gradOrange.addColorStop(1,   'rgba(249, 115, 22, 0.00)');
 
   dailyChartInstance = new Chart(ctx, {
     type: 'line',
@@ -269,16 +269,16 @@ function renderDailyChart(dailyMetrics, reportDate) {
       datasets: [{
         label: 'Daily Orders',
         data: sales,
-        borderColor: '#FF6B00',
+        borderColor: '#F97316',
         borderWidth: 2.5,
         backgroundColor: gradOrange,
         fill: true,
-        tension: 0.3,
-        pointRadius: 4,
+        tension: 0.35,
+        pointRadius: 4.5,
         pointHoverRadius: 7,
-        pointBackgroundColor: '#FF6B00',
-        pointBorderColor: '#0A0E1A',
-        pointBorderWidth: 2,
+        pointBackgroundColor: '#F97316',
+        pointBorderColor: '#FFFFFF',
+        pointBorderWidth: 2.5,
       }]
     },
     options: {
@@ -287,18 +287,20 @@ function renderDailyChart(dailyMetrics, reportDate) {
       plugins: {
         legend: {
           labels: {
-            color: '#94A3B8',
-            font: { family: "'Inter', sans-serif", size: 11, weight: '600' },
+            color: '#475569',
+            font: { family: "'Plus Jakarta Sans', sans-serif", size: 12, weight: '700' },
             usePointStyle: true,
             pointStyleWidth: 8
           }
         },
         tooltip: {
-          backgroundColor: 'rgba(15, 23, 42, 0.95)',
-          borderColor: 'rgba(255, 107, 0, 0.4)',
+          backgroundColor: '#FFFFFF',
+          borderColor: '#E2E8F0',
           borderWidth: 1,
-          titleColor: '#F0F4FF',
-          bodyColor: '#94A3B8',
+          titleColor: '#0F172A',
+          titleFont: { family: "'Plus Jakarta Sans', sans-serif", size: 13, weight: '700' },
+          bodyColor: '#475569',
+          bodyFont: { family: "'Plus Jakarta Sans', sans-serif", size: 12 },
           padding: 12,
           cornerRadius: 10,
           callbacks: {
@@ -308,8 +310,14 @@ function renderDailyChart(dailyMetrics, reportDate) {
         }
       },
       scales: {
-        x: { grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false }, ticks: { color: '#475569', font: { size: 11 } } },
-        y: { grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false }, ticks: { color: '#475569', font: { size: 11 }, precision: 0 } }
+        x: {
+          grid: { color: '#F1F5F9', drawBorder: false },
+          ticks: { color: '#94A3B8', font: { family: "'Plus Jakarta Sans', sans-serif", size: 12 } }
+        },
+        y: {
+          grid: { color: '#F1F5F9', drawBorder: false },
+          ticks: { color: '#94A3B8', font: { family: "'Plus Jakarta Sans', sans-serif", size: 12 }, precision: 0 }
+        }
       }
     }
   });
@@ -335,10 +343,10 @@ function renderMonthlyChart(monthlyMetrics) {
     sales  = [322, 402, 464, 673, 970];
   }
 
-  const gradViolet = ctx.createLinearGradient(0, 0, 0, 260);
-  gradViolet.addColorStop(0,   'rgba(124, 58, 237, 0.50)');
-  gradViolet.addColorStop(0.5, 'rgba(124, 58, 237, 0.12)');
-  gradViolet.addColorStop(1,   'rgba(124, 58, 237, 0.00)');
+  const gradOrangeMo = ctx.createLinearGradient(0, 0, 0, 265);
+  gradOrangeMo.addColorStop(0,   'rgba(249, 115, 22, 0.22)');
+  gradOrangeMo.addColorStop(0.65,'rgba(249, 115, 22, 0.06)');
+  gradOrangeMo.addColorStop(1,   'rgba(249, 115, 22, 0.00)');
 
   monthlyChartInstance = new Chart(ctx, {
     type: 'line',
@@ -347,16 +355,16 @@ function renderMonthlyChart(monthlyMetrics) {
       datasets: [{
         label: 'Monthly Orders',
         data: sales,
-        borderColor: '#7C3AED',
+        borderColor: '#F97316',
         borderWidth: 2.5,
-        backgroundColor: gradViolet,
+        backgroundColor: gradOrangeMo,
         fill: true,
         tension: 0.4,
-        pointRadius: 4,
+        pointRadius: 4.5,
         pointHoverRadius: 7,
-        pointBackgroundColor: '#7C3AED',
-        pointBorderColor: '#0A0E1A',
-        pointBorderWidth: 2,
+        pointBackgroundColor: '#F97316',
+        pointBorderColor: '#FFFFFF',
+        pointBorderWidth: 2.5,
       }]
     },
     options: {
@@ -365,25 +373,33 @@ function renderMonthlyChart(monthlyMetrics) {
       plugins: {
         legend: {
           labels: {
-            color: '#94A3B8',
-            font: { family: "'Inter', sans-serif", size: 11, weight: '600' },
+            color: '#475569',
+            font: { family: "'Plus Jakarta Sans', sans-serif", size: 12, weight: '700' },
             usePointStyle: true,
             pointStyleWidth: 8
           }
         },
         tooltip: {
-          backgroundColor: 'rgba(15, 23, 42, 0.95)',
-          borderColor: 'rgba(124, 58, 237, 0.3)',
+          backgroundColor: '#FFFFFF',
+          borderColor: '#E2E8F0',
           borderWidth: 1,
-          titleColor: '#F0F4FF',
-          bodyColor: '#94A3B8',
+          titleColor: '#0F172A',
+          titleFont: { family: "'Plus Jakarta Sans', sans-serif", size: 13, weight: '700' },
+          bodyColor: '#475569',
+          bodyFont: { family: "'Plus Jakarta Sans', sans-serif", size: 12 },
           padding: 12,
           cornerRadius: 10,
         }
       },
       scales: {
-        x: { grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false }, ticks: { color: '#475569', font: { size: 11 } } },
-        y: { grid: { color: 'rgba(255,255,255,0.04)', drawBorder: false }, ticks: { color: '#475569', font: { size: 11 }, precision: 0 } }
+        x: {
+          grid: { color: '#F1F5F9', drawBorder: false },
+          ticks: { color: '#94A3B8', font: { family: "'Plus Jakarta Sans', sans-serif", size: 12 } }
+        },
+        y: {
+          grid: { color: '#F1F5F9', drawBorder: false },
+          ticks: { color: '#94A3B8', font: { family: "'Plus Jakarta Sans', sans-serif", size: 12 }, precision: 0 }
+        }
       }
     }
   });
